@@ -2,4 +2,22 @@ materiali per un corso Android
 
 AM001_Intent
 
-Bottone, Toast e Una nuova activity
+Activity
+  onCreate()
+Button
+  setOnClickListener
+    onClick
+Toast
+Intent
+
+AM002_Intent
+
+Activity
+  finish()
+  onActivityResult
+  setResult()
+Bundle
+Intent
+  putExtra()
+
+
