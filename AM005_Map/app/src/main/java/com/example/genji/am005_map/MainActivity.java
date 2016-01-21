@@ -15,8 +15,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+        Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse("geo:45.495403,12.257509"));
+        startActivity(i);
+    }
+
+    public void onClickBrowser(View view) {
+        String url = "www.zuccante.it";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
         startActivity(i);
     }
 }
