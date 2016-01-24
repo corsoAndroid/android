@@ -48,6 +48,17 @@ AM006_Activity *****************************************
 
 Notification ... "Activity LifeCycle"
 
+AM007_Browser ******************************************
+
+<activity android:name=".Browser">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+            </intent-filter>
+        </activity>
+
+
 
 
 
