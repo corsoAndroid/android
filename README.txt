@@ -58,6 +58,22 @@ AM007_Browser ******************************************
             </intent-filter>
         </activity>
 
+AM008_DialogFragment ***********************************
+
+FragmentManager manager = getFragmentManager();
+getActivity()
+DialogFragment
+onCreateDialog()
+TextView.OnEditorActionListener
+TimePicker
+DatePicher
+
+AM011_Layout ********************************************
+
+esempi di Layout: in continuo aggiornamento
+
+
+
 
 
 
