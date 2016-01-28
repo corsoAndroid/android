@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentOne fr = new FragmentOne();
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fr);
+        fragmentTransaction.add(R.id.fragment_container, fr);
         fragmentTransaction.commit();
 
 
@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             fr = new FragmentOne();
         }
-
 
 
         FragmentManager fm = getFragmentManager();
