@@ -22,9 +22,22 @@ public class MyListFragment extends ListFragment implements AdapterView.OnItemCl
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // create the adapter
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.products, android.R.layout.simple_list_item_1);
+        // connect the adapter
         setListAdapter(adapter);
+        // connect the listener
         getListView().setOnItemClickListener(this);
+        
+        /** without R.array.products
+         * 
+         * String[] products = new String[] { ... };
+         * ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+         * android.R.layout.simple_list_item_1, values);
+         * setListAdapter(adapter);
+         * getListView().setOnItemClickListener(this);
+         */
+        
     }
 
     @Override
