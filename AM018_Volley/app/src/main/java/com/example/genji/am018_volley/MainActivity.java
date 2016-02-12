@@ -124,8 +124,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Adding request to the unique request queue
-        AppController.getInstance().addToRequestQueue(jsonObjReq);
+        // Adding request to the unique request queue OLD VERSION using AppController
+        // AppController.getInstance().addToRequestQueue(jsonObjReq);
+
+        // Add a request (in this example, called stringRequest) to your RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(jsonObjReq);
     }
 
     /**
@@ -184,8 +187,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(req);
+        // Adding request to request queue OLD VERSION
+        // AppController.getInstance().addToRequestQueue(req);
+
+        // Add a request (in this example, called stringRequest) to your RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(req);
     }
 
     private void showpDialog() {

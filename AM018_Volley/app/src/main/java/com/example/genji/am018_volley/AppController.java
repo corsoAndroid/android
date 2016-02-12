@@ -7,13 +7,22 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-/**
+/** OLD AND ORIGINAL VERSION
+ *
+ * There is normally no need to subclass Application.
+ * In most situation, static singletons can provide the same functionality in a more modular way.
+ * If your singleton needs a global context (for example to register broadcast receivers),
+ * the function to retrieve it can be given a Context which internally uses
+ * Context.getApplicationContext() when first constructing the singleton.
+ *
  * Created by genji on 2/11/16.
  * singleton pattern for queue
  *
  * add in manifest, application
  *
  * android:name=".AppController"
+ * 
+ * Application is itself a singleton
  */
 public class AppController extends Application {
     // obtain the name of the class (not with package path)
