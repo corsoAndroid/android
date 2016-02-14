@@ -21,7 +21,7 @@ public class MainActivity extends ListActivity {
             "frollini plus",
             "cioccolini",
             "secchini",
-            "gissinini",
+            "grissinini",
             "patasplash",
             "majopatas",
             "crocchette al sesamo",
