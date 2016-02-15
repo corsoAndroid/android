@@ -55,6 +55,7 @@ public class MyImageAdapter extends BaseAdapter {
             // if it's not recycled, initialize some attributes
             itemView = inflater.inflate(R.layout.item, null);
             viewHolder = new ViewHolder();
+            // NetworkImageView extends ImageView
             viewHolder.imageView = (ImageView)itemView.findViewById(R.id.networkImageView);
             itemView.setTag(viewHolder);
             // set image based on selected text
