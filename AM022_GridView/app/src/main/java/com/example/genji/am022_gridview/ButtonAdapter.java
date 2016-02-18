@@ -12,6 +12,8 @@ import android.widget.GridView;
  * Created by genji on 2/14/16.
  */
 public class ButtonAdapter extends BaseAdapter {
+
+    // in a class that is not an activity or a service devlare a context
     private Context mContext;
 
     // Gets the context so it can be used later
@@ -43,7 +45,7 @@ public class ButtonAdapter extends BaseAdapter {
             // if it's not recycled, initialize some attributes
             btn = new Button(mContext);
             btn.setLayoutParams(new GridView.LayoutParams(210, 140));
-            btn.setPadding(8, 8, 8, 8);
+            btn.setPadding(4, 4, 4, 4);
         }
         else {
             btn = (Button) convertView;
@@ -52,7 +54,7 @@ public class ButtonAdapter extends BaseAdapter {
         // filenames is an array of strings
         // btn.setTextColor(ContextCompat.getColor(mContext, R.color.colorMyGrey));
         btn.setId(position);
-        btn.setOnClickListener(new MyOnClickListener(position));
+        btn.setOnClickListener(new MyOnClickListener(position,mContext));
         return btn;
     }
 }
