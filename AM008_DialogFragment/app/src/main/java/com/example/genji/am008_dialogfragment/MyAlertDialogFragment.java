@@ -11,8 +11,11 @@ public class MyAlertDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
-                // set dialog icon
-                .setIcon(android.R.drawable.stat_notify_error)
+                /* set dialog icon: https://design.google.com/icons/#ic_alarm_on
+                *  Right click on res folder, selecting New > Image Asset.
+                *  browse image file. Select the largest image you have
+                */
+                .setIcon(R.mipmap.ic_alarm_on_black)
                 // set Dialog Title
                 .setTitle("Alert dialog fragment example")
                 // Set Dialog Message
