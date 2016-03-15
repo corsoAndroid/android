@@ -8,6 +8,13 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
+/* see
+ *
+ * http://developer.android.com/training/animation/cardflip.html
+ * http://developer.android.com/guide/topics/resources/animation-resource.html
+ *
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     float x1,x2;
@@ -91,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // Right to left swipe action
                     else {
-                        ;changeFragment();
+                        changeFragment();
                     }
                 }
                 else {
@@ -116,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
             FragmentTransaction ft = fm.beginTransaction();
             // (enter, exit)
-            ft.setCustomAnimations(R.anim.slide_in_left, R.anim.fade);
+            ft.setCustomAnimations(R.animator.slide_in_left, R.animator.fade);
             // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             ft.replace(R.id.fragment, nextFragment);
             ft.commit();
