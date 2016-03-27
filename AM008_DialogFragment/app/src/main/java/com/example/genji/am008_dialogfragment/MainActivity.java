@@ -26,19 +26,23 @@ public class MainActivity extends AppCompatActivity {
         }
         */
         switch (view.getId()) {
-            case R.id.showCustomFragment:
+            case R.id.custom_1:
                 MyDialogFragment editNameDialog = new MyDialogFragment();
                 editNameDialog.show(manager, "fragment_edit");
                 break;
-            case R.id.showAlertDialogFragment:
+            case R.id.custom_2:
+                MyDialogFragment2 editNameDialog2 = new MyDialogFragment2();
+                editNameDialog2.show(manager, "fragment_edit");
+                break;
+            case R.id.alert:
                 MyAlertDialogFragment alertDialogFragment = new MyAlertDialogFragment();
                 alertDialogFragment.show(manager, "fragment_alrt");
                 break;
-            case R.id.datePicker:
+            case R.id.date_picker:
                 DatePickerFragment datePickerFragment = new DatePickerFragment();
                 datePickerFragment.show(manager, "date_picker");
                 break;
-            case R.id.timePicker:
+            case R.id.time_picker:
                 TimePickerFragment timePickerFragment = new TimePickerFragment();
                 timePickerFragment.show(manager, "time_picker");
                 break;
