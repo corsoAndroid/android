@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,73 +29,82 @@ public class Connector {
     static final String TAG = "Volley";
 
     // json array response url
-    private String urlJsonArry = "192.168.1.2";
+    private static final String myurl = "http://192.168.1.2";
     // the main activity
     private Context context;
     // Progress dialog
     private ProgressDialog pDialog;
 
-    // protocol
-
-    private static boolean queryOK;
-    private static boolean connectionOK;
-
-    // the data
-
+    // the data (received and transmitted)
     List<Product> products;
 
     // constructor
 
     public Connector(Context context){
         this.context = context;
-        this.queryOK = false;
-        this.connectionOK = false;
         pDialog = new ProgressDialog(context);
+        pDialog.setCancelable(false);
+        products = new ArrayList<>();
     }
 
     /**
      * Method to make json array request where response starts with [
      * a message show the request
      *
-     * es: message = "queryAll"
-     *     gestString = queryAll (see PHP)
+     * es: message = "select"
+     *     gestString = select (see PHP)
      *
      * */
     private void makeJsonArrayRequest(String dialogMessage, String getString) {
 
-        showpDialog(dialogMessage);
+        final String urlComplete = myurl + "/" + getString;
 
-        JsonArrayRequest req = new JsonArrayRequest(urlJsonArry + getString,
+        // showpDialog(dialogMessage + " :" + urlComplete);
+
+        JsonArrayRequest req = new JsonArrayRequest(urlComplete,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+
                         Log.d(TAG, response.toString());
                         try {
                             // Parsing json array response
                             // loop through each json object
                             JSONObject first = (JSONObject)response.get(0);
-                            if(first.has("sql")){
-                                if(first.getString("sql") == "ok"){
-                                    queryOK = true;
-                                } else {
-                                    queryOK = false;
-                                }
-                            }
                             if(first.has("connection")){
-                                if(first.getString("connection") == "ok"){
-                                    connectionOK = true;
+                                if(first.getString("connection").matches("ok")){
+                                    Log.d(TAG, "connection ok");
+                                    Toast.makeText(context, "connection OK", Toast.LENGTH_SHORT).show();
+                                    // hide dialog
+                                    hidepDialog();
                                 } else {
-                                    connectionOK = false;
+                                    Toast.makeText(context, "connection NK", Toast.LENGTH_SHORT).show();
+                                    // hide dialog
+                                    hidepDialog();
                                 }
                                 return;
                             }
-                            for (int i = 0; i < response.length(); i++) {
+                            if(first.has("sql")){
+                                if(first.getString("sql").matches("nok")){
+                                    Toast.makeText(context, "query NOK", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+
+                            // this is not a select query
+                            if(response.get(1)==null) return;
+
+                            for (int i = 1; i < response.length(); i++) {
 
                                 JSONObject msg = (JSONObject) response.get(i);
 
-                                if (msg.has("sql") | msg.has("connection")) continue;
 
-                                // TUTTO IL PROTOCOLLO
+
+                                long id = msg.getLong("_id");
+                                String name = msg.getString("name");
+                                String description = msg.getString("description");
+                                products.add(new Product(id, name, description, 0));
+                                Log.d(TAG, "download: " + name + ", " + description);
 
                             }
 
@@ -103,7 +114,7 @@ public class Connector {
                                     "Error: " + e.getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
-
+                        // hide dialog
                         hidepDialog();
                     }
                 }, new Response.ErrorListener() {
@@ -112,12 +123,25 @@ public class Connector {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(context,
                         error.getMessage(), Toast.LENGTH_SHORT).show();
+                // hide dialog
                 hidepDialog();
             }
         });
 
         // Add a request
         MySingleton.getInstance(context).addToRequestQueue(req);
+    }
+
+    void downloadAll(){
+        makeJsonArrayRequest("select all", "select.php");
+        MainActivity ma = (MainActivity)context;
+        ma.products = this.products;
+    }
+
+
+
+    public void testConnection(){
+        makeJsonArrayRequest("test connection", "connection.php");
     }
 
     // dialog methods

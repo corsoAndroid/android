@@ -3,11 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/update"
+            android:id="@+id/drawer_update"
             android:icon="@drawable/ic_autorenew_24dp"
-            android:title="Update" />
+            android:title="Download/Upload" />
         <item
-            android:id="@+id/io"
+            android:id="@+id/drawer_connection"
             android:icon="@drawable/ic_import_export_24dp"
             android:title="Check Connection" />
     </group>

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -35,7 +36,11 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ProductAdapter pAdapter;
-    private List<Product> products;
+    List<Product> products;
+    List<Long> pUpdateds;
+    List<Long> pDeleteds;
+
+
 
     // manage connection
     private Connector mConnector;
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // fragment manager for dialogs
         fm = getFragmentManager();
 
         // create a connector
@@ -77,6 +83,7 @@ public class MainActivity extends AppCompatActivity
 
         // specify an adapter
         products = MyData.createList();
+        //products = new ArrayList<>();
         pAdapter = new ProductAdapter(products, this);
         mRecyclerView.setAdapter(pAdapter);
 
@@ -143,10 +150,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.update) {
+        if (id == R.id.drawer_update) {
             // Udate with remote resource
-        } else if (id == R.id.io) {
+            downloadAll();
+            Log.w("UPDATE", "download all");
+        } else if (id == R.id.drawer_connection) {
             // Check connection
+            testConnection();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,4 +201,27 @@ public class MainActivity extends AppCompatActivity
         dialog.setArguments(args);
         dialog.show(fm, "");
     }
+
+    // remote methods
+
+    public void downloadAll(){
+        for(int position = 0; position < products.size(); position++){
+            products.remove(position);
+            // NOTIFY TO UPDATE
+            pAdapter.notifyItemRemoved(position);
+        }
+        // UPDATE LIST
+        mConnector.downloadAll();
+        // for(Product p : products) Log.w("PRODUCT", p.getName());
+        // if(products.isEmpty()) Log.w("PRODUCT", "ALLARME");
+        for(int position = 0; position < products.size(); position++){
+            pAdapter.notifyItemChanged(position);
+        }
+        // ***************** NB: notifyAll doesnt work here *****************
+    }
+
+    public void testConnection(){
+        mConnector.testConnection();
+    }
+
 }

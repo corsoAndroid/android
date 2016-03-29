@@ -12,7 +12,7 @@ import java.util.List;
 public class MyData {
 
     public static List<Product> createList() {
-        List<Product> products = new ArrayList<Product>();
+        List<Product> products = new ArrayList<>();
         products.add(new Product(1, "gioppini", " panetti sfiziosi", 0));
         products.add(new Product(2, "frollini plus", "frollini gustosi", 0));
         products.add(new Product(3, "secchini", "biscotti secchi", 0));
