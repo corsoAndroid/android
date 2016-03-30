@@ -26,25 +26,23 @@ import java.util.List;
 public class Connector {
 
     // TAG for Volley
-    static final String TAG = "Volley";
+    static final String TAG = "Connector";
 
-    // json array response url
+    // json array response url (modify it changing server)
     private static final String myurl = "http://192.168.1.2";
     // the main activity
     private Context context;
-    // Progress dialog
-    private ProgressDialog pDialog;
-
     // the data (received and transmitted)
     List<Product> products;
+    // protocol
+    boolean connectionOK, queryOK, down;
 
     // constructor
 
     public Connector(Context context){
         this.context = context;
-        pDialog = new ProgressDialog(context);
-        pDialog.setCancelable(false);
         products = new ArrayList<>();
+        connectionOK = queryOK = false;
     }
 
     /**
@@ -55,7 +53,7 @@ public class Connector {
      *     gestString = select (see PHP)
      *
      * */
-    private void makeJsonArrayRequest(String dialogMessage, String getString) {
+    private void makeJsonArrayRequest(String getString) {
 
         final String urlComplete = myurl + "/" + getString;
 
@@ -68,54 +66,47 @@ public class Connector {
 
                         Log.d(TAG, response.toString());
                         try {
-                            // Parsing json array response
-                            // loop through each json object
+                            // test connection before any action
                             JSONObject first = (JSONObject)response.get(0);
+                            // test connection
                             if(first.has("connection")){
                                 if(first.getString("connection").matches("ok")){
                                     Log.d(TAG, "connection ok");
+                                    connectionOK = true;
                                     Toast.makeText(context, "connection OK", Toast.LENGTH_SHORT).show();
-                                    // hide dialog
-                                    hidepDialog();
                                 } else {
+                                    connectionOK = false;
                                     Toast.makeText(context, "connection NK", Toast.LENGTH_SHORT).show();
-                                    // hide dialog
-                                    hidepDialog();
                                 }
                                 return;
                             }
-                            if(first.has("sql")){
-                                if(first.getString("sql").matches("nok")){
-                                    Toast.makeText(context, "query NOK", Toast.LENGTH_SHORT).show();
-                                    return;
+                            if(connectionOK){
+                                if (first.has("sql")) {
+                                    if (first.getString("sql").matches("nok")) {
+                                        Toast.makeText(context, "query NOK", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
                                 }
-                            }
 
-                            // this is not a select query
-                            if(response.get(1)==null) return;
+                                // this is not a select query
+                                if (response.get(1) == null) return;
 
-                            for (int i = 1; i < response.length(); i++) {
-
-                                JSONObject msg = (JSONObject) response.get(i);
-
-
-
-                                long id = msg.getLong("_id");
-                                String name = msg.getString("name");
-                                String description = msg.getString("description");
-                                products.add(new Product(id, name, description, 0));
-                                Log.d(TAG, "download: " + name + ", " + description);
-
-                            }
-
+                                for (int i = 1; i < response.length(); i++) {
+                                    // download a single object
+                                    JSONObject msg = (JSONObject) response.get(i);
+                                    long id = msg.getLong("_id");
+                                    String name = msg.getString("name");
+                                    String description = msg.getString("description");
+                                    products.add(new Product(id, name, description, 0));
+                                    Log.d(TAG, "downloaded: " + name + ", " + description);
+                                }
+                            } else return;
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(context,
                                     "Error: " + e.getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
-                        // hide dialog
-                        hidepDialog();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -123,36 +114,40 @@ public class Connector {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(context,
                         error.getMessage(), Toast.LENGTH_SHORT).show();
-                // hide dialog
-                hidepDialog();
             }
         });
-
         // Add a request
         MySingleton.getInstance(context).addToRequestQueue(req);
     }
 
-    void downloadAll(){
-        makeJsonArrayRequest("select all", "select.php");
-        MainActivity ma = (MainActivity)context;
-        ma.products = this.products;
-    }
-
-
-
     public void testConnection(){
-        makeJsonArrayRequest("test connection", "connection.php");
+        makeJsonArrayRequest("connection.php");
     }
 
-    // dialog methods
-
-    private void showpDialog(String msg) {
-        if (!pDialog.isShowing())
-            pDialog.show(context, "action", msg);
+    List<Product> downloadAll(){
+        makeJsonArrayRequest("select.php");
+        return products;
     }
 
-    private void hidepDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+    void update(int position){
+        MainActivity ma = (MainActivity)context;
+        products = ma.products;
+        long id = products.get(position).getId();
+        String name = products.get(position).getName();
+        String description = products.get(position).getDescription();
+        String urlRequest = "update.php?id=" + String.valueOf(id) + "&name=" + name
+                + "&description=" + description;
+        makeJsonArrayRequest(urlRequest);
     }
+
+    void delete(long id){
+        String urlRequest = "delete.php?id=" + String.valueOf(id);
+        makeJsonArrayRequest(urlRequest);
+    }
+
+
+
+
+
+
 }

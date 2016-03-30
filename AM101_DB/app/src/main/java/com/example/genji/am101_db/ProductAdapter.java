@@ -34,6 +34,27 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
+    public void add(Product product, int position) {
+        position = position == -1 ? getItemCount()  : position;
+        productList.add(position, product);
+        notifyItemInserted(position);
+    }
+
+    public void remove(int position){
+        if (position < getItemCount()  ) {
+            productList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void update(int position, String description){
+        if (position < getItemCount()  ) {
+            productList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+
     @Override
     public void onBindViewHolder(ProductViewHolder pvh, int i) {
         Product p = productList.get(i);

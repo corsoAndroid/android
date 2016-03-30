@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mLayoutManager;
     private ProductAdapter pAdapter;
     List<Product> products;
-    List<Long> pUpdateds;
-    List<Long> pDeleteds;
+    List<Integer> productsUpdated; // positions
+    List<Long> productsDeleted; //ids
 
 
 
@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity
         // specify an adapter
         products = MyData.createList();
         //products = new ArrayList<>();
+        productsUpdated = new ArrayList<>();
+        productsDeleted = new ArrayList<>();
+
         pAdapter = new ProductAdapter(products, this);
         mRecyclerView.setAdapter(pAdapter);
 
@@ -152,7 +155,15 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.drawer_update) {
             // Udate with remote resource
-            downloadAll();
+            if(!mConnector.down){
+                downloadAll();
+                mConnector.down = true;
+            } else {
+                deleteAll();
+                updateAll();
+                mConnector.down = true;
+            }
+
             Log.w("UPDATE", "download all");
         } else if (id == R.id.drawer_connection) {
             // Check connection
@@ -169,10 +180,12 @@ public class MainActivity extends AppCompatActivity
     public void add(Product product){
         // add a product to list
         products.add(product);
-        pAdapter.notifyDataSetChanged();
+        pAdapter.notifyItemInserted(products.size()-1);
     }
 
     public void update(int position, String description){
+        // add product position ti update list
+        productsUpdated.add(position);
         Product updated = products.get(position);
         updated.setDescription(description);
         updated.setUpdated(1);
@@ -180,6 +193,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void delete(int position){
+        // add id product
+        productsDeleted.add(products.get(position).getId());
         products.remove(position);
         // NOTIFY TO UPDATE
         pAdapter.notifyItemRemoved(position);
@@ -202,7 +217,11 @@ public class MainActivity extends AppCompatActivity
         dialog.show(fm, "");
     }
 
-    // remote methods
+    // Connector methods
+
+    public void testConnection(){
+        mConnector.testConnection();
+    }
 
     public void downloadAll(){
         for(int position = 0; position < products.size(); position++){
@@ -210,18 +229,20 @@ public class MainActivity extends AppCompatActivity
             // NOTIFY TO UPDATE
             pAdapter.notifyItemRemoved(position);
         }
-        // UPDATE LIST
-        mConnector.downloadAll();
-        // for(Product p : products) Log.w("PRODUCT", p.getName());
-        // if(products.isEmpty()) Log.w("PRODUCT", "ALLARME");
-        for(int position = 0; position < products.size(); position++){
-            pAdapter.notifyItemChanged(position);
+        for(Product product : mConnector.downloadAll()){
+            add(product);
         }
         // ***************** NB: notifyAll doesnt work here *****************
     }
 
-    public void testConnection(){
-        mConnector.testConnection();
+    public void updateAll(){
+        for(int position : productsUpdated) mConnector.update(position);
+        productsUpdated.clear();
+    }
+
+    public void deleteAll(){
+        for(long id : productsDeleted) mConnector.delete(id);
+        productsDeleted.clear();
     }
 
 }
