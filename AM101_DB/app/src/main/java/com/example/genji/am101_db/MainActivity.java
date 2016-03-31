@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mLayoutManager;
     private ProductAdapter pAdapter;
     // lists for products
-    List<Product> products;
+    // List<Product> products;
     // CRUD list for remote DB
     List<Product> productsInserted;
     List<Integer> productsUpdated; // positions
@@ -77,20 +77,21 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // add an offline set of products
-        products = MyData.createList();
+        // products = MyData.createList();
         productsInserted = new ArrayList<>();
         productsUpdated = new ArrayList<>();
         productsDeleted = new ArrayList<>();
-        // adapter and recycler veiw
-        pAdapter = new ProductAdapter(products, this);
+        // adapter and his listeners
+        pAdapter = new ProductAdapter( MyData.createList());
         pAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String name = products.get(position).getName();
+                String name = pAdapter.getList().get(position).getName();
                 Toast.makeText(MainActivity.this, "#" + position + " - " + name, Toast.LENGTH_SHORT).show();
                 MainActivity.this.openUpdateDialog(name, position);
             }
         });
+        // recycler view
         mRecyclerView.setAdapter(pAdapter);
 
         // FAB
@@ -172,9 +173,11 @@ public class MainActivity extends AppCompatActivity
 
     // ********************* MY ADDED METHODS *******************
 
+    public ProductAdapter getAdapter(){return pAdapter;}
+
     public void add(Product product){
         productsInserted.add(product);
-        pAdapter.add(product, products.size());
+        pAdapter.add(product, pAdapter.getList().size());
     }
 
     public void update(int position, String description){
@@ -183,7 +186,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void delete(int position){
-        productsDeleted.add(products.get(position).getId());
+        productsDeleted.add(pAdapter.getList().get(position).getId());
         pAdapter.remove(position);
     }
 
@@ -211,11 +214,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void downloadAll(){
-        for(int position = 0; position < products.size(); position++){
+        for(int position = 0; position < pAdapter.getList().size(); position++){
             pAdapter.remove(position);
         }
         for(Product product : mConnector.downloadAll()){
-            add(product);
+            pAdapter.add(product, pAdapter.getList().size());
         }
         // ***************** NB: notifyAll doesnt work here *****************
     }

@@ -1,5 +1,6 @@
 package com.example.genji.am101_db;
 
+import android.app.ListFragment;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +21,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     // my data
     private List<Product> productList;
-    private Context mContext;
     // Define listener member variable
     private static OnItemClickListener listener;
     // Define the listener interface
@@ -34,15 +34,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductAdapter(List<Product> pData, Context context) {
-        productList = pData;
-        mContext = context;
+    public ProductAdapter(List<Product> products) {
+        productList = products;
     }
 
     @Override
     public int getItemCount() {
         return productList.size();
     }
+
+    public List<Product> getList(){return productList;}
 
     public void add(Product product, int position) {
         position = position == -1 ? getItemCount()  : position;

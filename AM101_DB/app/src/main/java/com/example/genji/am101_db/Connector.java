@@ -146,7 +146,7 @@ public class Connector {
 
     void update(int position){
         MainActivity ma = (MainActivity)context;
-        products = ma.products;
+        products = ma.getAdapter().getList();
         long id = products.get(position).getId();
         String name = products.get(position).getName();
         String description = products.get(position).getDescription();
