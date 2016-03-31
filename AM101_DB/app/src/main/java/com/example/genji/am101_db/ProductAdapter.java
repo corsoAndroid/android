@@ -1,7 +1,6 @@
 package com.example.genji.am101_db;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,17 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     // my data
     private List<Product> productList;
     private Context mContext;
+    // Define listener member variable
+    private static OnItemClickListener listener;
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ProductAdapter(List<Product> pData, Context context) {
@@ -49,8 +59,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public void update(int position, String description){
         if (position < getItemCount()  ) {
-            productList.remove(position);
-            notifyItemRemoved(position);
+            Product updated = productList.get(position);
+            updated.setDescription(description);
+            updated.setUpdated(1);
+            notifyItemChanged(position);
         }
     }
 
@@ -61,15 +73,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         pvh.vName.setText(p.getName());
         pvh.vDescription.setText(p.getDescription());
         pvh.vUpdated.setChecked(p.getUpdated() == 1 ? true : false);
-        pvh.setClickListener(new ItemClickListener() {
-
-            @Override
-            public void onClick(View view, int position) {
-                String name = (ProductAdapter.this.productList.get(position)).getName();
-                Toast.makeText(mContext, "#" + position + " - " + name, Toast.LENGTH_SHORT).show();
-                ((MainActivity) mContext).openUpdateDialog(name, position);
-            }
-        });
     }
 
     @Override
@@ -85,35 +88,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     // you provide access to all the views for a data item in a view holder
     public static class ProductViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener
+          //  implements View.OnClickListener
     {
         protected TextView vName;
         protected TextView vDescription;
         protected CheckBox vUpdated;
-        private ItemClickListener clickListener;
 
-        public ProductViewHolder(View pv) {
-            super(pv);
-            vName = (TextView) pv.findViewById(R.id.name);
-            vDescription = (TextView) pv.findViewById(R.id.description);
-            vUpdated = (CheckBox) pv.findViewById(R.id.updated);
-            pv.setOnClickListener(this);
-        }
-
-        public void setClickListener(ItemClickListener itemClickListener) {
-            this.clickListener = itemClickListener;
-        }
-
-        @Override
-        public void onClick(View view) {
-            clickListener.onClick(view, getLayoutPosition());
+        public ProductViewHolder(final View itemView) {
+            super(itemView);
+            vName = (TextView) itemView.findViewById(R.id.name);
+            vDescription = (TextView) itemView.findViewById(R.id.description);
+            vUpdated = (CheckBox) itemView.findViewById(R.id.updated);
+            // Setup the click listener
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null)
+                        listener.onItemClick(itemView, getLayoutPosition());
+                }
+            });
         }
     }
-
-    public static interface ItemClickListener {
-        void onClick(View view, int position);
-    }
-
 }
 
 

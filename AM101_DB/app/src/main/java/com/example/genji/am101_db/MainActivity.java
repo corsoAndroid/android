@@ -36,16 +36,19 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ProductAdapter pAdapter;
+    // lists for products
     List<Product> products;
+    // CRUD list for remote DB
+    List<Product> productsInserted;
     List<Integer> productsUpdated; // positions
     List<Long> productsDeleted; //ids
 
 
 
-    // manage connection
+    // manager for remote actions
     private Connector mConnector;
 
-    // fragment manager
+    // fragment manager fro dialgs
     FragmentManager fm;
 
     @Override
@@ -72,33 +75,31 @@ public class MainActivity extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
 
-            @Override
-            public void onTouchEvent (RecyclerView rv, MotionEvent e){
-
-            }
-        });
-
-
-        // specify an adapter
+        // add an offline set of products
         products = MyData.createList();
-        //products = new ArrayList<>();
+        productsInserted = new ArrayList<>();
         productsUpdated = new ArrayList<>();
         productsDeleted = new ArrayList<>();
-
+        // adapter and recycler veiw
         pAdapter = new ProductAdapter(products, this);
+        pAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String name = products.get(position).getName();
+                Toast.makeText(MainActivity.this, "#" + position + " - " + name, Toast.LENGTH_SHORT).show();
+                MainActivity.this.openUpdateDialog(name, position);
+            }
+        });
         mRecyclerView.setAdapter(pAdapter);
 
-
-
-
+        // FAB
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                 Snackbar.make(view, "adding a product", Snackbar.LENGTH_LONG).show();
+                       // .setAction("Action", null).show();
                 MainActivity.this.openInsertDialog();
 
             }
@@ -152,22 +153,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.drawer_update) {
-            // Udate with remote resource
-            if(!mConnector.down){
+        switch (id){
+            case R.id.drawer_connection:
+                testConnection();
+                break;
+            case R.id.drawer_download:
                 downloadAll();
-                mConnector.down = true;
-            } else {
-                deleteAll();
-                updateAll();
-                mConnector.down = true;
-            }
-
-            Log.w("UPDATE", "download all");
-        } else if (id == R.id.drawer_connection) {
-            // Check connection
-            testConnection();
+                break;
+            case R.id.drawer_upload:
+                uploadAll();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -175,29 +170,21 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    // MY ADDED METHODS *******************
+    // ********************* MY ADDED METHODS *******************
 
     public void add(Product product){
-        // add a product to list
-        products.add(product);
-        pAdapter.notifyItemInserted(products.size()-1);
+        productsInserted.add(product);
+        pAdapter.add(product, products.size());
     }
 
     public void update(int position, String description){
-        // add product position ti update list
-        productsUpdated.add(position);
-        Product updated = products.get(position);
-        updated.setDescription(description);
-        updated.setUpdated(1);
-        pAdapter.notifyItemChanged(position);
+        if (!productsUpdated.contains(position)) productsUpdated.add(position);
+        pAdapter.update(position, description);
     }
 
     public void delete(int position){
-        // add id product
         productsDeleted.add(products.get(position).getId());
-        products.remove(position);
-        // NOTIFY TO UPDATE
-        pAdapter.notifyItemRemoved(position);
+        pAdapter.remove(position);
     }
 
     public void openInsertDialog(){
@@ -225,9 +212,7 @@ public class MainActivity extends AppCompatActivity
 
     public void downloadAll(){
         for(int position = 0; position < products.size(); position++){
-            products.remove(position);
-            // NOTIFY TO UPDATE
-            pAdapter.notifyItemRemoved(position);
+            pAdapter.remove(position);
         }
         for(Product product : mConnector.downloadAll()){
             add(product);
@@ -235,14 +220,17 @@ public class MainActivity extends AppCompatActivity
         // ***************** NB: notifyAll doesnt work here *****************
     }
 
-    public void updateAll(){
+    public void uploadAll(){
+        // CRUD
+        for(Product product : productsInserted) mConnector.insert(product);
+        productsInserted.clear();
+        Toast.makeText(this, "products inserted in remote db", Toast.LENGTH_SHORT).show();
         for(int position : productsUpdated) mConnector.update(position);
         productsUpdated.clear();
-    }
-
-    public void deleteAll(){
+        Toast.makeText(this, "products updated in remote db", Toast.LENGTH_SHORT).show();
         for(long id : productsDeleted) mConnector.delete(id);
         productsDeleted.clear();
+        Toast.makeText(this, "products deleted in remote db", Toast.LENGTH_SHORT).show();
     }
 
 }

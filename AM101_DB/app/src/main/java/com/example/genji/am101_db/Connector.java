@@ -35,7 +35,7 @@ public class Connector {
     // the data (received and transmitted)
     List<Product> products;
     // protocol
-    boolean connectionOK, queryOK, down;
+    boolean connectionOK, queryOK;
 
     // constructor
 
@@ -61,8 +61,12 @@ public class Connector {
 
         JsonArrayRequest req = new JsonArrayRequest(urlComplete,
                 new Response.Listener<JSONArray>() {
+
                     @Override
                     public void onResponse(JSONArray response) {
+
+                        // clear product list
+                        products.clear();
 
                         Log.d(TAG, response.toString());
                         try {
@@ -76,31 +80,32 @@ public class Connector {
                                     Toast.makeText(context, "connection OK", Toast.LENGTH_SHORT).show();
                                 } else {
                                     connectionOK = false;
-                                    Toast.makeText(context, "connection NK", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "connection NOK", Toast.LENGTH_SHORT).show();
                                 }
                                 return;
                             }
-                            if(connectionOK){
-                                if (first.has("sql")) {
-                                    if (first.getString("sql").matches("nok")) {
-                                        Toast.makeText(context, "query NOK", Toast.LENGTH_SHORT).show();
-                                        return;
+                            if(connectionOK && first.has("sql")){
+                                if (first.getString("sql").matches("nok")) {
+                                    Toast.makeText(context, "query NOK", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else {
+                                    // this is not a select query
+                                    if (response.get(1) == null) return;
+                                    for (int i = 1; i < response.length(); i++) {
+
+                                        // download a single object
+                                        JSONObject msg = (JSONObject) response.get(i);
+                                        long id = msg.getLong("_id");
+                                        String name = msg.getString("name");
+                                        String description = msg.getString("description");
+                                        products.add(new Product(id, name, description, 0));
+                                        Log.d(TAG, "downloaded: " + name + ", " + description);
                                     }
                                 }
+                            } else {
+                                Toast.makeText(context, "Try connection!", Toast.LENGTH_SHORT).show();
+                            }
 
-                                // this is not a select query
-                                if (response.get(1) == null) return;
-
-                                for (int i = 1; i < response.length(); i++) {
-                                    // download a single object
-                                    JSONObject msg = (JSONObject) response.get(i);
-                                    long id = msg.getLong("_id");
-                                    String name = msg.getString("name");
-                                    String description = msg.getString("description");
-                                    products.add(new Product(id, name, description, 0));
-                                    Log.d(TAG, "downloaded: " + name + ", " + description);
-                                }
-                            } else return;
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(context,
@@ -120,13 +125,23 @@ public class Connector {
         MySingleton.getInstance(context).addToRequestQueue(req);
     }
 
+    // test connection method
     public void testConnection(){
         makeJsonArrayRequest("connection.php");
     }
 
+    // synchronizing method from external DB
     List<Product> downloadAll(){
         makeJsonArrayRequest("select.php");
         return products;
+    }
+
+    void insert(Product product){
+        String name = product.getName();
+        String description = product.getDescription();
+        String urlRequest = "insert.php?name=" + name
+                + "&description=" + description;
+        makeJsonArrayRequest(urlRequest);
     }
 
     void update(int position){
@@ -141,7 +156,7 @@ public class Connector {
     }
 
     void delete(long id){
-        String urlRequest = "delete.php?id=" + String.valueOf(id);
+        String urlRequest = "delete.php?_id=" + String.valueOf(id);
         makeJsonArrayRequest(urlRequest);
     }
 
