@@ -1,15 +1,11 @@
 package com.example.genji.am101_db;
 
-import android.app.ListFragment;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,7 +42,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public List<Product> getList(){return productList;}
 
     public void add(Product product, int position) {
-        position = position == -1 ? getItemCount()  : position;
+        position = (position == -1 ? getItemCount()  : position);
         productList.add(position, product);
         notifyItemInserted(position);
     }
@@ -67,7 +63,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
     }
 
-
     @Override
     public void onBindViewHolder(ProductViewHolder pvh, int i) {
         Product p = productList.get(i);
@@ -84,7 +79,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         return new ProductViewHolder(itemView);
     }
-
 
 
     // you provide access to all the views for a data item in a view holder

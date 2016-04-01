@@ -26,7 +26,7 @@ import java.util.List;
 public class Connector {
 
     // TAG for Volley
-    static final String TAG = "Connector";
+    static final String TAG = "VConnector";
 
     // json array response url (modify it changing server)
     private static final String myurl = "http://192.168.1.2";
@@ -86,21 +86,22 @@ public class Connector {
                             }
                             if(connectionOK && first.has("sql")){
                                 if (first.getString("sql").matches("nok")) {
-                                    Toast.makeText(context, "query NOK", Toast.LENGTH_SHORT).show();
+                                    queryOK = false;
                                     return;
                                 } else {
-                                    // this is not a select query
-                                    if (response.get(1) == null) return;
-                                    for (int i = 1; i < response.length(); i++) {
+                                    queryOK = false;
+                                }
+                                // this is not a select query
+                                if (response.get(1) == null) return;
+                                for (int i = 1; i < response.length(); i++) {
 
-                                        // download a single object
-                                        JSONObject msg = (JSONObject) response.get(i);
-                                        long id = msg.getLong("_id");
-                                        String name = msg.getString("name");
-                                        String description = msg.getString("description");
-                                        products.add(new Product(id, name, description, 0));
-                                        Log.d(TAG, "downloaded: " + name + ", " + description);
-                                    }
+                                    // download a single object
+                                    JSONObject msg = (JSONObject) response.get(i);
+                                    long id = msg.getLong("_id");
+                                    String name = msg.getString("name");
+                                    String description = msg.getString("description");
+                                    products.add(new Product(id, name, description, 0));
+                                    Log.d(TAG, "download: (" + id + ", " + name + ", " + description +")");
                                 }
                             } else {
                                 Toast.makeText(context, "Try connection!", Toast.LENGTH_SHORT).show();
@@ -133,6 +134,7 @@ public class Connector {
     // synchronizing method from external DB
     List<Product> downloadAll(){
         makeJsonArrayRequest("select.php");
+        Log.w(TAG, products.toString());
         return products;
     }
 
@@ -142,27 +144,27 @@ public class Connector {
         String urlRequest = "insert.php?name=" + name
                 + "&description=" + description;
         makeJsonArrayRequest(urlRequest);
+
+        if(queryOK) Log.w(TAG, "(" + name +", + " + description +") inserted");
     }
 
-    void update(int position){
-        MainActivity ma = (MainActivity)context;
-        products = ma.getAdapter().getList();
-        long id = products.get(position).getId();
-        String name = products.get(position).getName();
-        String description = products.get(position).getDescription();
+    void update(Product product){
+        long id = product.getId();
+        String name = product.getName();
+        String description = product.getDescription();
         String urlRequest = "update.php?id=" + String.valueOf(id) + "&name=" + name
                 + "&description=" + description;
         makeJsonArrayRequest(urlRequest);
+
+        if(queryOK) Log.w(TAG, "(" + name +", " + description +") updated");
     }
 
     void delete(long id){
         String urlRequest = "delete.php?_id=" + String.valueOf(id);
         makeJsonArrayRequest(urlRequest);
+
+        if(queryOK) Log.w(TAG, "(" + id +") deleted");
     }
-
-
-
-
 
 
 }

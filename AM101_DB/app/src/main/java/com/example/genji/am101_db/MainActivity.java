@@ -2,13 +2,10 @@ package com.example.genji.am101_db;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,11 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +23,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    // json array response url
-    // private String urlDB = "192.168.1.2";
-
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ProductAdapter pAdapter;
-    // lists for products
-    // List<Product> products;
+
     // CRUD list for remote DB
     List<Product> productsInserted;
-    List<Integer> productsUpdated; // positions
-    List<Long> productsDeleted; //ids
+    List<Product> productsUpdated;
+    List<Long> productsDeleted; // id product deleted
 
 
 
@@ -181,12 +170,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void update(int position, String description){
-        if (!productsUpdated.contains(position)) productsUpdated.add(position);
+        Product p = pAdapter.getList().get(position);
+        if (!productsUpdated.contains(p)) productsUpdated.add(p);
         pAdapter.update(position, description);
     }
 
     public void delete(int position){
-        productsDeleted.add(pAdapter.getList().get(position).getId());
+        Product p = pAdapter.getList().get(position);
+        long id = p.getId();
+        productsUpdated.remove(p);
+        productsDeleted.add(id);
         pAdapter.remove(position);
     }
 
@@ -214,21 +207,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void downloadAll(){
-        for(int position = 0; position < pAdapter.getList().size(); position++){
-            pAdapter.remove(position);
-        }
-        for(Product product : mConnector.downloadAll()){
-            pAdapter.add(product, pAdapter.getList().size());
-        }
-        // ***************** NB: notifyAll doesnt work here *****************
+        productsUpdated.clear();
+        productsInserted.clear();
+        productsDeleted.clear();
+        mRecyclerView.invalidate();
+        pAdapter = new ProductAdapter(mConnector.downloadAll());
+        // recycler view
+        mRecyclerView.setAdapter(pAdapter);
     }
 
     public void uploadAll(){
         // CRUD
-        for(Product product : productsInserted) mConnector.insert(product);
+        for(Product p : productsInserted) mConnector.insert(p);
         productsInserted.clear();
         Toast.makeText(this, "products inserted in remote db", Toast.LENGTH_SHORT).show();
-        for(int position : productsUpdated) mConnector.update(position);
+        for(Product p : productsUpdated) mConnector.update(p);
         productsUpdated.clear();
         Toast.makeText(this, "products updated in remote db", Toast.LENGTH_SHORT).show();
         for(long id : productsDeleted) mConnector.delete(id);
