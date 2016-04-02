@@ -15,19 +15,22 @@ class Query extends DB {
     
     public static function run_json($sql) {
         
-        $rows = array();
-        $result = parent::getInstance()->getConnection()->query($sql);
         
-        // reset json response
-        JSON::$response = array();
-
+        $result = parent::getInstance()->getConnection()->query($sql);
         // If query failed, return `false`
-        if($result === false) {
-            JSON::$response[] = array("sql"=>"nok");
+        if($result === FALSE) {
+            JSON::$response = array("sql"=>"nok");
             return;
         }
-        // If query was successful, retrieve all the rows into an array
+        if($result === TRUE) {
+            JSON::$response = array("sql"=>"ok");
+            return;
+        }
+        // reset json response
+        JSON::$response = array();
+        // If query was successful, retrieve all the rows into an array or True
         JSON::$response[] = array("sql"=>"ok");
+        $rows = array();
         while ($row = $result->fetch_assoc()) {
             // echoing JSON response
             JSON::$response[] = $row;

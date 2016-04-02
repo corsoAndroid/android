@@ -12,7 +12,7 @@ $str = "";
 if(isset($_GET['name']) and isset($_GET['description'])) {
     $name = $_GET['name'];
     $description = $_GET['description'];
-    $str = $str . "INSERT INTO Products(name, description) VALUES (\"" . $name ."\", \"" . $description . "\");" ;    
+    $str = $str . "INSERT INTO Products(name, description) VALUES (\"$name\", \"$description \");" ;    
     // echo $str;
 }
 

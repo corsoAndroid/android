@@ -11,7 +11,7 @@ $str = "";
 
 if(isset($_GET['_id'])) {
     $_id = $_GET['_id'];
-    $str = $str . "DELETE FROM Products WHERE _id = \"" . $_id . "\";" ;    
+    $str = $str . "DELETE FROM Products WHERE _id = \"$_id\";" ;    
     // echo $str;
 }
 

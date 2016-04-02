@@ -210,10 +210,11 @@ public class MainActivity extends AppCompatActivity
         productsUpdated.clear();
         productsInserted.clear();
         productsDeleted.clear();
-        mRecyclerView.invalidate();
-        pAdapter = new ProductAdapter(mConnector.downloadAll());
-        // recycler view
-        mRecyclerView.setAdapter(pAdapter);
+        // remove the local products
+        int size = pAdapter.getItemCount();
+        for(int i = 0; i < size; i++) pAdapter.remove(0);
+        // download from DB
+        mConnector.downloadAll();
     }
 
     public void uploadAll(){
@@ -228,5 +229,4 @@ public class MainActivity extends AppCompatActivity
         productsDeleted.clear();
         Toast.makeText(this, "products deleted in remote db", Toast.LENGTH_SHORT).show();
     }
-
 }
