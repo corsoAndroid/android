@@ -15,15 +15,16 @@ class Query extends DB {
     
     public static function run_json($sql) {
         
-        
         $result = parent::getInstance()->getConnection()->query($sql);
+        // reset json response
+        JSON::$response = array();
         // If query failed, return `false`
         if($result === FALSE) {
-            JSON::$response = array("sql"=>"nok");
+            JSON::$response[] = array("sql"=>"nok");
             return;
         }
         if($result === TRUE) {
-            JSON::$response = array("sql"=>"ok");
+            JSON::$response[] = array("sql"=>"ok");
             return;
         }
         // reset json response
