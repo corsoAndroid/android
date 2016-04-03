@@ -37,7 +37,7 @@ public class Contact {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
 
         for (int i = 1; i <= numContacts; i++) {
-            contacts.add(new Contact("Person " + (++lastContactId), "meail" + +i + "@zappo.it", i <= numContacts / 2));
+            contacts.add(new Contact("Person " + (++lastContactId), "meail" + lastContactId + "@zappo.it", i <= numContacts / 2));
         }
 
         return contacts;
