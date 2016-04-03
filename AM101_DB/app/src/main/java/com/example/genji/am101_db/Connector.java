@@ -2,7 +2,6 @@ package com.example.genji.am101_db;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,8 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by genji on 3/26/16.
@@ -178,7 +175,7 @@ public class Connector {
             return;
         }
         String urlRequest = "delete.php?_id=" + String.valueOf(id);
-        queryOKrequest(myurl + urlRequest);
+        queryOKrequest(myurl + "/" + urlRequest);
         if(queryOK) Log.w(TAG, "(" + id +") deleted");
     }
 
@@ -192,15 +189,14 @@ public class Connector {
                         try {
                             JSONObject first = (JSONObject) response
                                     .get(0);
+                            if(first.has("sql") && first.getString("sql").matches("ok")){
+                                queryOK = true;
+                                return;
+                            }
                             if(first.has("sql") && first.getString("sql").matches("nok")){
                                 queryOK = false;
                                 return;
                             }
-                            if(response.length()==1){
-                                Toast.makeText(context, "no products in DB", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(context,
