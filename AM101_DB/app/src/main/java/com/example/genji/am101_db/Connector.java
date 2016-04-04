@@ -113,7 +113,7 @@ public class Connector {
                                 String name = product.getString("name");
                                 String description = product.getString("description");
                                 Log.d(TAG, "download: (" + id + ", " + name + ", " + description +")");
-                                ma.add(new Product(id, name, description, 0));
+                                ma.rawAdd(new Product(id, name, description, 0));
                             }
 
                         } catch (JSONException e) {
@@ -142,12 +142,12 @@ public class Connector {
         }
         String name = product.getName();
         String description = product.getDescription();
-        String urlRequest = Uri.parse("insert.php")
-                .buildUpon()
-                .appendQueryParameter("name", name)
-                .appendQueryParameter("description", description)
-                .build().toString();
-        queryOKrequest(myurl + "/" + urlRequest);
+        String urlRequest = myurl + "/insert.php?" +
+                "name=" +  Uri.encode(name) + "&"
+                + "description=" + Uri.encode(description);
+        Log.w(TAG, urlRequest);
+        // request
+        queryOKrequest(urlRequest);
         if(queryOK) Log.w(TAG, "(" + name +", + " + description +") inserted");
     }
 
@@ -159,13 +159,13 @@ public class Connector {
         long id = product.getId();
         String name = product.getName();
         String description = product.getDescription();
-        String urlRequest = Uri.parse("update.php")
-                .buildUpon()
-                .appendQueryParameter("_id", String.valueOf(id))
-                .appendQueryParameter("name", name)
-                .appendQueryParameter("description", description)
-                .build().toString();
-        queryOKrequest(myurl + "/" + urlRequest);
+        String urlRequest = myurl + "/update.php?" +
+                "_id=" + Uri.encode(String.valueOf(id)) + "&" +
+                "name=" + Uri.encode(name) + "&"
+                + "description=" + Uri.encode(description);
+        Log.w(TAG, urlRequest);
+        // request
+        queryOKrequest(urlRequest);
         if(queryOK) Log.w(TAG, "(" + name +", " + description +") updated");
     }
 
@@ -174,8 +174,11 @@ public class Connector {
             Toast.makeText(context, "Try connection!", Toast.LENGTH_SHORT).show();
             return;
         }
-        String urlRequest = "delete.php?_id=" + String.valueOf(id);
-        queryOKrequest(myurl + "/" + urlRequest);
+        String urlRequest = myurl + "/delete.php?" +
+                "_id=" + Uri.encode(String.valueOf(id));
+        Log.w(TAG, urlRequest);
+        // request
+        queryOKrequest(urlRequest);
         if(queryOK) Log.w(TAG, "(" + id +") deleted");
     }
 

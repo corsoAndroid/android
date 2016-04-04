@@ -39,7 +39,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
-    public List<Product> getList(){return productList;}
+    public Product getProduct(int position){
+        return productList.get(position);
+    }
 
     public void add(Product product, int position) {
         position = (position == -1 ? getItemCount()  : position);

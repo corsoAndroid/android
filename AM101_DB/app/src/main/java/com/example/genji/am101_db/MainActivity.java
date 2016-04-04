@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         pAdapter.setOnItemClickListener(new ProductAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String name = pAdapter.getList().get(position).getName();
+                String name = pAdapter.getProduct(position).getName();
                 Toast.makeText(MainActivity.this, "#" + position + " - " + name, Toast.LENGTH_SHORT).show();
                 MainActivity.this.openUpdateDialog(name, position);
             }
@@ -166,21 +166,26 @@ public class MainActivity extends AppCompatActivity
 
     public void add(Product product){
         productsInserted.add(product);
-        pAdapter.add(product, pAdapter.getList().size());
+        pAdapter.add(product, pAdapter.getItemCount());
+    }
+
+    // used only by connector in first download
+    public void rawAdd(Product product){
+        pAdapter.add(product, pAdapter.getItemCount());
     }
 
     public void update(int position, String description){
-        Product p = pAdapter.getList().get(position);
+        Product p = pAdapter.getProduct(position);
         if (!productsUpdated.contains(p)) productsUpdated.add(p);
         pAdapter.update(position, description);
     }
 
     public void delete(int position){
-        Product p = pAdapter.getList().get(position);
-        long id = p.getId();
-        productsUpdated.remove(p);
-        productsDeleted.add(id);
+        Product p = pAdapter.getProduct(position);
         pAdapter.remove(position);
+        long id = p.getId();
+        if(productsUpdated.contains(p)) productsUpdated.remove(p);
+        productsDeleted.add(id);
     }
 
     public void openInsertDialog(){
