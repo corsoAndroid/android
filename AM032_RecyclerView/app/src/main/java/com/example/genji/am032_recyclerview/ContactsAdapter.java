@@ -29,7 +29,10 @@ public class ContactsAdapter extends
     // Usually involves inflating a layout from XML and returning the holder
     @Override
     public ContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        /* without context
+           Context context = parent.getContext();
+           LayoutInflater inflater = LayoutInflater.from(context);
+         */
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
