@@ -24,10 +24,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String[] projection = new String[] {
                         MediaStore.Audio.AudioColumns.ALBUM,
-                        MediaStore.Audio.AudioColumns.TITLE };
+                        MediaStore.Audio.AudioColumns.TITLE,
+                        };
                 Uri contentUri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
                 Cursor cursor = getContentResolver().query(contentUri,
-                        projection, null, null, null);
+                        projection, MediaStore.Audio.AudioColumns.IS_RINGTONE , null , null);
+                        // projection, MediaStore.Audio.Media.DATA + " like ? ", new String[] {"%ringtones%"}, null);
                 // Get the index of the columns we need.
                 int albumIdx = cursor
                         .getColumnIndexOrThrow(MediaStore.Audio.AudioColumns.ALBUM);
