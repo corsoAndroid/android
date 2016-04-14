@@ -16,9 +16,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button but = (Button) findViewById(R.id.buttonret);
+        Button bAudio = (Button) findViewById(R.id.audio);
+        Button bFile = (Button) findViewById(R.id.file);
         final TextView text = (TextView) findViewById(R.id.text);
-        but.setOnClickListener(new View.OnClickListener() {
+
+        bAudio.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri contentUri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
                 Cursor cursor = getContentResolver().query(contentUri,
                         projection, MediaStore.Audio.AudioColumns.IS_RINGTONE , null , null);
+                        // projection, MediaStore.Files.FileColumns.PARENT + " = 'ringtones'" , null , null);
                         // projection, MediaStore.Audio.Media.DATA + " like ? ", new String[] {"%ringtones%"}, null);
                 // Get the index of the columns we need.
                 int albumIdx = cursor
@@ -47,6 +50,42 @@ public class MainActivity extends AppCompatActivity {
                     // Extract the album name.
                     String album = cursor.getString(albumIdx);
                     result[cursor.getPosition()] = title + " (" + album + ")";
+                }
+                // Close the Cursor.
+                String allSongs = "";
+                cursor.close();
+                for(String line : result) allSongs += line + "\n";
+                text.setText(allSongs);
+            }
+
+        });
+
+        bFile.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String[] projection = new String[] {
+                        MediaStore.Files.FileColumns.TITLE,
+                        MediaStore.Files.FileColumns.PARENT
+                };
+                Uri contentUri = MediaStore.Files.getContentUri("internal");
+                Cursor cursor = getContentResolver().query(contentUri,
+                        projection, null, null , null);
+                int titleIdx = cursor
+                        .getColumnIndexOrThrow(MediaStore.Files.FileColumns.TITLE);
+                int parentIdx = cursor
+                        .getColumnIndexOrThrow(MediaStore.Files.FileColumns.PARENT);
+                String[] result = new String[cursor.getCount()];
+                /*
+                 * Iterate over the Cursor, extracting each album name and song
+                 * title.
+                 */
+                while (cursor.moveToNext()) {
+                    // Extract the song title.
+                    String title = cursor.getString(titleIdx);
+                    // String parent = cursor.getString(parentIdx);
+                    String parent = cursor.getString(parentIdx);
+                    result[cursor.getPosition()] = "[" + parent +"]/" + title;
                 }
                 // Close the Cursor.
                 String allSongs = "";
