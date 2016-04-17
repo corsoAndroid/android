@@ -81,13 +81,13 @@ public class StudentsProvider extends ContentProvider {
         // get helper to initialize db
         DatabaseHelper dbHelper = new DatabaseHelper(context);
         db = dbHelper.getWritableDatabase();
-        return (db == null)? false:true;
+        return (db == null)? false : true;
     }
 
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long rowID = db.insert(	STUDENTS_TABLE_NAME, "", values);
+        long rowID = db.insert(STUDENTS_TABLE_NAME, "", values);
         if (rowID > 0) {
             Uri _uri = ContentUris.withAppendedId(CONTENT_URI, rowID);
             getContext().getContentResolver().notifyChange(_uri, null);
@@ -101,11 +101,24 @@ public class StudentsProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
+
+        // " ... This is a convience class that helps build SQL queries to be sent to SQLiteDatabase objects ...."
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        // " ... Sets the list of tables to query ... "
         qb.setTables(STUDENTS_TABLE_NAME);
 
         switch (uriMatcher.match(uri)) {
             case STUDENTS:
+                /*
+                 * " ... API
+                 * Sets the projection map for the query.
+                 * The projection map maps from column names that the caller passes into query
+                 * to database column names.
+                 * This is useful for renaming columns as well as disambiguating column names
+                 * when doing joins. For example you could map "name" to "people.name".
+                 * If a projection map is set it must contain all column names the user may request,
+                 * even if the key and value are the same. ... "
+                 */
                 qb.setProjectionMap(STUDENTS_PROJECTION_MAP);
                 break;
 
