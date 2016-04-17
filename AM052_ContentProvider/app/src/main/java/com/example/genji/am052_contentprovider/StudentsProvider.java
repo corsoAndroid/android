@@ -29,11 +29,13 @@ public class StudentsProvider extends ContentProvider {
     static final String NAME = "name";
     static final String GRADE = "grade";
 
+    // "... maps from the user column names to the database column names ..."
     private static HashMap<String, String> STUDENTS_PROJECTION_MAP;
 
     static final int STUDENTS = 1;
     static final int STUDENT_ID = 2;
 
+    // " ... UriMatcher, which maps content URI "patterns" to integer values ... "
     static final UriMatcher uriMatcher;
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -54,10 +56,7 @@ public class StudentsProvider extends ContentProvider {
                     " name TEXT NOT NULL, " +
                     " grade TEXT NOT NULL);";
 
-    /**
-     * Helper class that actually creates and manages
-     * the provider's underlying data repository.
-     */
+    // helper class
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         DatabaseHelper(Context context){
