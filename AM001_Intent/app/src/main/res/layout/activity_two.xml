@@ -12,7 +12,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activity Two"
+        android:text="@string/activity_two"
+        android:textColor="@color/my_color"
+        android:textSize="40dp"
         android:id="@+id/textView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

@@ -14,30 +14,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /* I STEP
-        Button btn = (Button) findViewById(R.id.button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Toast.makeText(getBaseContext(), "Button was clicked!",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
-
-        /*
-        IN GNERAL
-
-        Intent i = new Intent();
-        i.setAction("com.example.genji.Activity2");
-        startActivity(i);
-
-        FROM THIS APP
-
-        Intent i = new Intent(MainActivity.this, ActivityTwo.class);
-        startActivity(i);
-        */
-
-
         //---Button view---
         Button btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
