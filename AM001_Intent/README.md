@@ -14,6 +14,7 @@ btn.setOnClickListener(new View.OnClickListener() {
         }
 }); 
 ```
+AL posto di `getBaseContext()` anche `MainActivity.this`.
 Consigliamo sempre di andare a vedere le API degli oggetti che utilizziamo.
 
 **2)** Mediante un **Intent**, sempre con un bottone lanciare una seconda **Activity**.
@@ -21,10 +22,17 @@ Consigliamo sempre di andare a vedere le API degli oggetti che utilizziamo.
 Diamo del codice per raggiungere l'obiettivo. In generale procediamo così.
 ```
 Intent i = new Intent();
-i.setAction("com.example.genji.Activity2");
+i.setAction("com.examples.genji.AM001.ActivityTwo");
 startActivity(i);
 ```
-Nel nostro caso invece.
+ricordando, nel **Manifest** di andare ad inserire un **Intent Filetr**
+```
+<intent-filter>
+    <action android:name="com.examples.genji.AM001.ActivityTwo" />
+    <category android:name="android.intent.category.DEFAULT" />
+</intent-filter>
+```
+In modo **esplicito** invece possiamo (senza toccare il Manifest.
 ```
 Intent i = new Intent(MainActivity.this, ActivityTwo.class);
 startActivity(i);
