@@ -18,18 +18,15 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, ActivityTwo.class);
-                // use putExtra() to add new key/value pairs to intent i ---
+
                 i.putExtra("str1", "Message Example");
                 i.putExtra("n1", 25);
 
-                // use a Bundle object to add new key/values
                 Bundle extras = new Bundle();
                 extras.putString("str2", "This is another string");
                 extras.putInt("n2", 666);
-                // attach the Bundle object to the Intent object
                 i.putExtras(extras);
 
-                // start the activity to get a result back
                 startActivityForResult(i, 1);
             }
         });
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (resultCode == RESULT_OK) {
             // data passed in using getStringExtra() via Intent data
-            Toast.makeText(this, data.getStringExtra("rok"),
+            Toast.makeText(this, data.getStringExtra("nok"),
                     Toast.LENGTH_SHORT).show();
         }
     }

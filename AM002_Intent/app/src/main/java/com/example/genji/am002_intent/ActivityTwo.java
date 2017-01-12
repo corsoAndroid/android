@@ -32,9 +32,7 @@ public class ActivityTwo extends AppCompatActivity {
         Toast.makeText(this,Integer.toString(bundle.getInt("n2")),
                 Toast.LENGTH_SHORT).show();
 
-
-
-
+        // ... trick for landscape
         if(findViewById(R.id.state_land) == null){
             TextView state = (TextView)findViewById(R.id.state);
             state.setText("bundle{str2: \"" + bundle.getString("str2") + "\", n2: " + String.valueOf(bundle.getInt("n2"))+"}");
@@ -46,7 +44,7 @@ public class ActivityTwo extends AppCompatActivity {
                     // no arguments in constructor !!!!
                     Intent i = new Intent();
                     // use putExtra() to add new key/value pairs to intent i ---
-                    i.putExtra("rok", "RESULT OK");
+                    i.putExtra("nok", "RESULT OK");
                     //---set the result with OK and the Intent object---
                     ActivityTwo.this.setResult(RESULT_OK, i);
                     ActivityTwo.this.finish();
@@ -58,7 +56,7 @@ public class ActivityTwo extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent i = new Intent(ActivityTwo.this, ActivityTwo.class);
                     // use putExtra() to add new key/value pairs to intent i ---
-                    i.putExtra("rok", "RESULT OK");
+                    i.putExtra("nok", "RESULT OK");
                     //---set the result with OK and the Intent object---
                     // ActivityTwo.this.setResult(RESULT_OK, i);
                     ActivityTwo.this.finish();

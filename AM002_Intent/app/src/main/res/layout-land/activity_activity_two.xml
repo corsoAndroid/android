@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Activity 2"
+        android:text="@string/activity_two"
         android:id="@+id/textView2"
         android:layout_alignBottom="@+id/finish"
         android:layout_alignParentRight="true"
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="State"
+        android:text="@string/state"
         android:id="@+id/state_land"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
