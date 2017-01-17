@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int ACTIVITY_TWO = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 extras.putInt("n2", 666);
                 i.putExtras(extras);
 
-                startActivityForResult(i, 1);
+                startActivityForResult(i, ACTIVITY_TWO);
             }
         });
     }
@@ -35,15 +37,13 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode,
                                  int resultCode, Intent data) {
         // check if the request code is 1 (we came from 1 ... )
-        if (requestCode == 1) {
+        if (requestCode == ACTIVITY_TWO) {
             //---if the result is OK---
-        }
-        if (resultCode == RESULT_OK) {
-            // data passed in using getStringExtra() via Intent data
-            Toast.makeText(this, data.getStringExtra("nok"),
-                    Toast.LENGTH_SHORT).show();
+            if (resultCode == RESULT_OK) {
+                // data passed in using getStringExtra() via Intent data
+                Toast.makeText(this, data.getStringExtra("isOK"),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
-
-
 }

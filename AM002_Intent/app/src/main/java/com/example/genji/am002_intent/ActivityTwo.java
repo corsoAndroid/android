@@ -32,38 +32,47 @@ public class ActivityTwo extends AppCompatActivity {
         Toast.makeText(this,Integer.toString(bundle.getInt("n2")),
                 Toast.LENGTH_SHORT).show();
 
+        // .. picking widgets
+        TextView state = (TextView)findViewById(R.id.state);
+        Button rok = (Button) findViewById(R.id.rok);
+        Button finish = (Button) findViewById(R.id.finish);
+
         // ... trick for landscape
         if(findViewById(R.id.state_land) == null){
-            TextView state = (TextView)findViewById(R.id.state);
+
             state.setText("bundle{str2: \"" + bundle.getString("str2") + "\", n2: " + String.valueOf(bundle.getInt("n2"))+"}");
-
-
-            Button rok = (Button) findViewById(R.id.rok);
             rok.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     // no arguments in constructor !!!!
                     Intent i = new Intent();
                     // use putExtra() to add new key/value pairs to intent i ---
-                    i.putExtra("nok", "RESULT OK");
+                    i.putExtra("isOK", "RESULT OK");
                     //---set the result with OK and the Intent object---
                     ActivityTwo.this.setResult(RESULT_OK, i);
+                    /*
+                     * Call this when your activity is done and should be closed.
+                     * The ActivityResult is propagated back to whoever launched
+                     * Call this when your activity is done and should be closed.
+                     * The ActivityResult is propagated back to whoever launched you via onActivityResult().
+                     */
                     ActivityTwo.this.finish();
+
                 }
             });
 
-            Button finish = (Button) findViewById(R.id.finish);
+
             finish.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     Intent i = new Intent(ActivityTwo.this, ActivityTwo.class);
                     // use putExtra() to add new key/value pairs to intent i ---
-                    i.putExtra("nok", "RESULT OK");
+                    i.putExtra("isOK", "RESULT OK");
                     //---set the result with OK and the Intent object---
                     // ActivityTwo.this.setResult(RESULT_OK, i);
                     ActivityTwo.this.finish();
                 }
             });
         } else {
-            TextView state = (TextView)findViewById(R.id.state_land);
+            state = (TextView)findViewById(R.id.state_land);
             //state.setText("bundle{str2: \"" + bundle.getString("str2") + "\", n2: " + String.valueOf(bundle.getInt("n2"))+"}");
             if(savedInstanceState != null){
                 state.setText("bundle{str4: \"" + savedInstanceState.getString("str4") + "\", n4: " + String.valueOf(savedInstanceState.getInt("n4"))+"}");
