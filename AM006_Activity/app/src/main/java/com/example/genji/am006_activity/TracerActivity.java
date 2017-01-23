@@ -31,13 +31,21 @@ public class TracerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStart() {
+        super.onStart();
         if (BuildConfig.DEBUG) {
-            // Log.d : send a debug message
-            Log.d(MyLOG.TAG, "onPause called");
+            Log.d(MyLOG.TAG, "onStart called");
         }
-        notify("onPause");
+        notify("onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (BuildConfig.DEBUG) {
+            Log.d(MyLOG.TAG, "onRestart called");
+        }
+        notify("onRestart");
     }
 
     @Override
@@ -47,6 +55,16 @@ public class TracerActivity extends AppCompatActivity {
             Log.d(MyLOG.TAG, "onResume called");
         }
         notify("onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (BuildConfig.DEBUG) {
+            // Log.d : send a debug message
+            Log.d(MyLOG.TAG, "onPause called");
+        }
+        notify("onPause");
     }
 
     @Override
