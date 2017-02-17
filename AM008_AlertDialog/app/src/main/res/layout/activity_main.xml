@@ -58,4 +58,12 @@
         android:id="@+id/compat_3"
         android:layout_gravity="center_horizontal"
         android:onClick="onClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="App Compat 4"
+        android:id="@+id/compat_4"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onClick"/>
 </LinearLayout>

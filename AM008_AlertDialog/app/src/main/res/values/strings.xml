@@ -3,4 +3,5 @@
     <string name="positive">OK</string>
     <string name="negative">NO</string>
     <string name="custom_dialog">ChatRoom</string>
+    <string name="custom2">... custom</string>
 </resources>

@@ -23,17 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
 
-        final AlertDialog.Builder builder;
-
-
+        AlertDialog.Builder builder;
         FragmentManager manager = getFragmentManager();
-        /* close existing dialog fragments .. da sistemare
-        Fragment frag = manager.findFragmentByTag("fragment_edit_name");
-        if (frag != null) {
-            manager.beginTransaction().remove(frag).commit();
-        }
-        */
-
 
         DialogInterface.OnClickListener listener_OK = new DialogInterface.OnClickListener() {
             @Override
@@ -103,6 +94,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                break;
+            case R.id.compat_4:
+                View viewAlert = getLayoutInflater().inflate(R.layout.custom, null);
+                builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.custom2);
+                builder.setView(viewAlert);
+                builder.setNeutralButton("zap", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(MainActivity.this, "neutral button is n: " + i , Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.show();
+
         }
     }
 
