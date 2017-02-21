@@ -1,6 +1,9 @@
 package com.example.genji.am008_alertdialog;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -107,6 +112,26 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
+                break;
+            case R.id.dfragment_3:
+
+                int style, theme;
+                String sStyle, sTheme;
+                sStyle = ((EditText)this.findViewById(R.id.style)).getText().toString();
+                sTheme = ((EditText)this.findViewById(R.id.theme)).getText().toString();
+                style = (sStyle == null) ? 0 : Integer.parseInt(sStyle);
+                theme = (sTheme == null) ? 0 : Integer.parseInt(sTheme);
+
+                FragmentTransaction ft = manager.beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+                DialogFragment newFragment = MyDFragment01.newInstance(style, theme);
+                newFragment.show(ft, "dialog");
 
         }
     }
