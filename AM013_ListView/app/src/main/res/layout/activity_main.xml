@@ -7,9 +7,8 @@
     tools:context="com.example.genji.am013_listview.MainActivity">
 
     <ListView
-        android:id="@+id/my_list_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
-    </ListView>
+        android:id="@+id/my_list_view"/>
 
 </android.support.constraint.ConstraintLayout>
