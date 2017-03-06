@@ -42,13 +42,15 @@ public class MainActivity extends ListActivity {
 
 
         ListView lstView = getListView();
-        //lstView.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        // lstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        lstView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        // lstView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+        lstView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        // lstView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         // you can select item
-        lstView.setTextFilterEnabled(true);
+        // lstView.setTextFilterEnabled(true);
+        /*setListAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_checked, products)); */
         setListAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_checked, products));
+                android.R., products));
 
 
     }
