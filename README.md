@@ -12,5 +12,12 @@ Ecco la sequenza delle nostre esercitazioni.
 ## Fragment & Dialogs
 
 - AM010_Fragment: primo esercizio sui Fragment.
-- AM012_Fragment: secondo esercizio sui Fragment.
+- AM012_Fragment: secondo esercizio sui Fragment con animazioni.
 - AM008_AlertDialog: FragmentDialog per Picker e Dialog.
+- AM009_Fragments: **pattern** comunicazione fra due fragment di una stessa activity.
+
+## ListView
+
+- AM013_ListView.
+- AM014_ListFragment.
+- AM015_ViewHolder: **pattern** del ViewHolder.
