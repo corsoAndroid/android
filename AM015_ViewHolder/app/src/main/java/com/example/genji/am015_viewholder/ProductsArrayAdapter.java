@@ -1,6 +1,7 @@
 package com.example.genji.am015_viewholder;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by genji on 4/2/16.
+ * Created by genji on 4/2/16. Updated on 11/03/2017
  */
 public class ProductsArrayAdapter extends ArrayAdapter<Product> {
     private final Activity context;
     // the products arrayList
     private ArrayList products;
+
+    private static final String TAG = "ViewHolder";
 
     // this object will be tag
     static class ViewHolder {
@@ -52,9 +55,13 @@ public class ProductsArrayAdapter extends ArrayAdapter<Product> {
                     .findViewById(R.id.icon);
             // take memory of the view
             rowView.setTag(viewHolder);
+            // Log steTag()
+            Log.d(TAG, "setTag() for object in position: " + position + "; product name: " + p.getName());
         } else {
             // reuse the object
             viewHolder = (ViewHolder) rowView.getTag();
+            // Log steTag()
+            Log.d(TAG, "getTag() for object in position: " + position);
         }
         viewHolder.image.setImageResource(R.mipmap.ic_launcher);
         viewHolder.name.setText(p.getName());

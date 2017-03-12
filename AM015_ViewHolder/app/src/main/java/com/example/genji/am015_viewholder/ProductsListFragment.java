@@ -34,6 +34,8 @@ public class ProductsListFragment extends ListFragment implements AdapterView.On
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // initialize products array
+
         products = new ArrayList<>();
         products.add(new Product("gioppini", "panetti sfiziosi"));
         products.add(new Product("jambonetti", "salatini al prosciutto"));

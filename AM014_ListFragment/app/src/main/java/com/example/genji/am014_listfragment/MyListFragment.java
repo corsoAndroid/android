@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 /**
- * Created by genji on 1/31/16.
+ * Created by genji on 1/31/16. Updated on 11/03/2017
  */
 public class MyListFragment extends ListFragment implements AdapterView.OnItemClickListener {
     @Override
