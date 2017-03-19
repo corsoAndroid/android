@@ -16,9 +16,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class OperateActivity extends AppCompatActivity {
+public class OperateActivity extends AppCompatActivity implements InputDialog.AddListener {
 
+    /* OLD solution
     AlertDialog.Builder builder;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,19 @@ public class OperateActivity extends AppCompatActivity {
                  * Snackbar.make(view, "Add a product", Snackbar.LENGTH_LONG)
                  * .setAction("Action", null).show();
                  */
+
+                /* OLD solution
                 showInputDialog();
+                */
+
+                FragmentManager fm = getFragmentManager();
+                InputDialog dialogFragment = new InputDialog();
+                dialogFragment.show(fm, "MyInputDialog");
             }
         });
     }
 
+    /* OLD Solution
     protected void showInputDialog() {
 
         builder = new AlertDialog.Builder(this);
@@ -80,6 +90,24 @@ public class OperateActivity extends AppCompatActivity {
                     }
                 });
         builder.show();
+    }
+    */
+
+    @Override
+    public void addProduct(Product product){
+        ProductsDataSource pds = new ProductsDataSource(this);
+        // DB transaction
+        pds.open();
+        pds.createProduct(product);
+        pds.close();
+        // get FragmentManager in order to obtain FragmentList
+        FragmentManager fm = getFragmentManager();
+        ProductsListFragment plf = (ProductsListFragment)fm.findFragmentById(R.id.fragment);
+        // update list fragment
+        ProductsArrayAdapter adapter = (ProductsArrayAdapter)plf.getListAdapter();
+        adapter.add(product);
+        adapter.notifyDataSetChanged();
+
     }
 }
 
